@@ -1,0 +1,40 @@
+<template>
+    <lightning-card title="My Requests">
+
+        <!-- Header Action -->
+        <div slot="actions">
+            <lightning-button
+                label="+ New Request"
+                variant="brand"
+                onclick={openModal}>
+            </lightning-button>
+        </div>
+
+        <!-- Child Modal -->
+        <template if:true={isModalOpen}>
+            <c-new-request-modal
+                onclose={handleCloseModal}
+                onrequestcreated={handleRequestCreated}>
+            </c-new-request-modal>
+        </template>
+        <!-- Datatable -->
+        <template if:true={allRequests.length}>
+            <div class="slds-m-around_small slds-scrollable_y" style="height: 14rem;">
+                <lightning-datatable
+                    key-field="Id"
+                    data={allRequests}
+                    columns={columns}
+                    hide-checkbox-column
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </div>
+        </template>
+
+        <template if:false={allRequests.length}>
+            <div class="slds-m-around_medium slds-text-align_center slds-text-color_weak">
+                No requests found.
+            </div>
+        </template>
+
+    </lightning-card>
+</template>

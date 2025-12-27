@@ -1,0 +1,23 @@
+<template>
+    <lightning-card title="Block Summary">
+        <div class="slds-m-around_medium">
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+
+            <!-- Data Table -->
+            <template if:false={isLoading}>
+                <lightning-datatable
+                    key-field="blockId"
+                    data={data}
+                    columns={columns}
+                    hide-checkbox-column="true"
+                >
+                </lightning-datatable>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

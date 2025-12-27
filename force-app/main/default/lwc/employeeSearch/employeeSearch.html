@@ -1,0 +1,88 @@
+<template>
+    <lightning-card title="Employee Search">
+    
+        <!-- Info Text -->
+        <div class="slds-text-body_small slds-text-color_weak slds-m-around_small slds-m-bottom_none">
+            Search to quickly find employees and see where they are located by Block and Group.
+        </div>
+
+        <div class="slds-m-around_small slds-m-top_none">
+            <div class="slds-form-element__control">
+                <lightning-input
+                    type="search"
+                    placeholder="Search employee by name (e.g. Abhinav, Suman)"
+                    value={searchKey}
+                    onchange={handleChange}
+                    onfocus={openDropdown}
+                    onblur={closeDropdown}>
+                </lightning-input>
+            </div>
+
+            <!-- Dropdown -->
+            <template if:true={isDropdownOpen}>
+                <div
+                    class="slds-dropdown slds-dropdown_fluid slds-dropdown_length-5 slds-m-top_xx-small slds-m-horizontal_small"
+                    role="listbox">
+
+                    <!-- Loading -->
+                    <template if:true={isLoading}>
+                        <div class="slds-align_absolute-center slds-p-around_medium">
+                            <lightning-spinner size="small"></lightning-spinner>
+                        </div>
+                    </template>
+
+                    <!-- Results -->
+                    <template if:true={hasResults}>
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <template for:each={employees} for:item="emp">
+                                <li
+                                    key={emp.Id}
+                                    class="slds-listbox__item"
+                                    role="presentation"
+                                    data-id={emp.Id}
+                                    onclick={handleSelect}>
+
+                                    <div
+                                        class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small"
+                                        role="option">
+
+                                        <span class="slds-media__body">
+                                            <div class="slds-grid slds-grid_vertical-align-center">
+                                                <span class="slds-truncate slds-text-heading_small">
+                                                {emp.Name}
+                                                </span>
+
+                                                <lightning-badge
+                                                    label= {emp.blockLabel}
+                                                    class="slds-m-around_xx-small">
+                                                </lightning-badge>
+
+                                                <lightning-badge
+                                                    label= {emp.groupLabel}
+                                                    class="slds-m-around_xx-small"> 
+                                                </lightning-badge>
+                                            </div>
+
+                                        </span>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+
+                    <!-- No Results -->
+                    <template if:false={hasResults}>
+                        <template if:false={isLoading}>
+                            <div class="slds-p-around_medium slds-text-align_center slds-text-color_weak">
+                                No employees found
+                            </div>
+                        </template>
+                    </template>
+
+                </div>
+            </template>
+        </div>
+
+    </lightning-card>
+
+</template>

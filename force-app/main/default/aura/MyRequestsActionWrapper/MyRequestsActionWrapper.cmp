@@ -1,0 +1,3 @@
+<aura:component implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId">
+    <c:newRequestModal onrequestcreated="{!c.handleRequestCreated}" onclose="{!c.handleClose}"></c:newRequestModal>
+</aura:component>

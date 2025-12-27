@@ -1,0 +1,84 @@
+<template>
+    <lightning-card title="Pending Approval Requests">
+
+        <template if:true={hasApprovals}>
+            <div class="slds-m-around_small slds-text-color_weak slds-text-body_regular">
+                You have pending approval requests. Please review and take necessary action.
+            </div>
+            <div class="slds-scrollable_y" style="height: 21rem; min-height: 310px; ">
+                <div class="slds-grid slds-wrap slds-m-around_x-small">
+
+                <template for:each={approvals} for:item="approval">
+                    <div
+                        key={approval.workItemId}
+                        class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small">
+
+                        <div class="slds-box slds-theme_shade slds-p-around_medium">
+
+                            <!-- Row 1 -->
+                            <div class="slds-grid slds-m-bottom_small">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-button
+                                        label={approval.recordName}
+                                        variant="base"
+                                        onclick={handleOpenRecord}
+                                        data-id={approval.recordId}>
+                                    </lightning-button> 
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                                    <strong>{approval.submittedBy}</strong>
+                                </div>
+                            </div>
+
+                            <!-- Row 2 -->
+                            <div class="slds-grid slds-m-bottom_small">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Request Type:</strong><br/>
+                                    {approval.requestType}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                                    <strong>Date:</strong><br/>
+                                    <lightning-formatted-date-time
+                                        value={approval.dateOfRequest}
+                                        year="numeric"
+                                        month="short"
+                                        day="2-digit">
+                                    </lightning-formatted-date-time>
+                                </div>
+                            </div>
+
+                            <!-- Row 3 -->
+                            <div class="slds-grid slds-m-bottom_medium">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Block:</strong><br/>
+                                    {approval.blockName}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                                    <strong>Group:</strong><br/>
+                                    {approval.groupName}
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+
+                            <c-approval-actions record-id={approval.recordId} onrefreshparent={handleRefresh}>   
+                            </c-approval-actions>
+                            
+
+                        </div>
+                    </div>
+                </template>
+
+            </div>
+            </div>
+        </template>
+
+        <template if:false={hasApprovals}>
+            <div class="slds-m-around_medium slds-text-color_weak">
+                No pending approval requests available.
+            </div>
+        </template>
+
+    </lightning-card>
+
+</template>

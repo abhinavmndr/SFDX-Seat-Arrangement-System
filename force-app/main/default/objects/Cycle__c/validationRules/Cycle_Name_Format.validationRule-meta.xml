@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cycle_Name_Format</fullName>
+    <active>true</active>
+    <description>Ensures that the Name field follows the required format: the word &quot;Cycle&quot; followed by a space and a numeric value. Prevents users from entering invalid names.</description>
+    <errorConditionFormula>NOT(REGEX(Name, &quot;Cycle [0-9]+&quot;))</errorConditionFormula>
+    <errorMessage>Name must be in the format &quot;Cycle &quot; followed by a number. Example: Cycle 1</errorMessage>
+</ValidationRule>

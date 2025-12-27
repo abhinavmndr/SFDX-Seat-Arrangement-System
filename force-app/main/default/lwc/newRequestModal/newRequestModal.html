@@ -1,0 +1,107 @@
+<template>
+    <template if:false={isClosed}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close"
+                        onclick={closeModal}>
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            size="small">
+                        </lightning-icon>
+                    </button>
+
+                    <h2 class="slds-text-heading_medium">
+                        Create Request
+                    </h2>
+                    
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium " style="overflow: visible;">
+
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_2-of-2">
+                            <lightning-combobox
+                                label="Request Type"
+                                placeholder="Select Request Type"
+                                options={typeOptions}
+                                value={selectedType}
+                                onchange={handleTypeChange}>
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="Group"
+                                placeholder="Select Group"
+                                options={groupOptions}
+                                value={selectedGroup}
+                                onchange={handleGroupChange}>
+                            </lightning-combobox>
+                            
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="Block"
+                                placeholder="Select Block"
+                                options={blockOptions}
+                                value={selectedBlock}
+                                onchange={handleBlockChange}>
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                    
+                    <template if:true={showAvailableSeats}>
+                        
+                        <div class="slds-m-top_medium slds-text-heading_small">
+                            Available Seats for Selected Block & Group:&nbsp;
+                            <strong>{availableSeats}</strong>
+                        </div>
+                    </template>
+                    <template if:false={showAvailableSeats}>
+                        
+                        <div class="slds-m-top_medium slds-text-heading_small">
+                            Please select Block and Group to see available seats.
+                        </div>
+                    </template>
+
+                    <div class="slds-m-top_medium">
+                        <lightning-textarea
+                            label="Reason"
+                            placeholder="Enter request reason"
+                            value={reason}
+                            onchange={handleReasonChange}>
+                        </lightning-textarea>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button
+                        label="Cancel"
+                        variant="neutral"
+                        onclick={closeModal}>
+                    </lightning-button>
+
+                    <lightning-button
+                        label="Submit"
+                        variant="brand"
+                        class="slds-m-left_small"
+                        onclick={handleSubmit}>
+                    </lightning-button>
+                </footer>
+
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

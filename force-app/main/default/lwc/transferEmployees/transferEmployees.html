@@ -1,0 +1,197 @@
+<template>
+    <lightning-card title="Transfer Employees" icon-name="standard:employee">
+        <div class="slds-p-around_medium">
+            
+
+           <div class="slds-grid slds-gutters slds-align_absolute-center">
+
+                <!-- Combobox: 2/5 -->
+                <div class="slds-col slds-size_1-of-5">
+                    <lightning-combobox
+                        id="combo"
+                        variant="label-hidden"
+                        value={selectedFilterMethod}
+                        placeholder="Choose Method"
+                        options={filterOptions}
+                        onchange={handleFilterMethodChange}>
+                    </lightning-combobox>
+                </div>
+
+                <!-- Search Field (Name OR Team): 2/5 -->
+                <div class="slds-col slds-size_3-of-5">
+
+                    <!-- Search by Name -->
+                    <template if:true={isNameFilter}>
+                        <lightning-input
+                            id="nameInput"
+                            variant="label-hidden"
+                            type="text"
+                            value={selectedName}
+                            onchange={handleNameChange}
+                            placeholder="Enter Employee Name">
+                        </lightning-input>
+                    </template>
+
+                    <!-- Search by Team -->
+                    <template if:true={isTeamFilter}>
+                        <lightning-combobox
+                            id="teamInput"
+                            variant="label-hidden"
+                            placeholder="Select Team"
+                            options={teamOptions}
+                            value={selectedTeam}
+                            onchange={handleTeamChange}>
+                        </lightning-combobox>
+                    </template>
+
+
+                </div>
+
+                <!-- Update Button: 1/5 -->
+                <div class="slds-col slds-size_1-of-5 slds-align-bottom slds-text-align_center">
+
+                    <lightning-button
+                        label="Update Employee(s)"
+                        variant="brand"
+                        onclick={openModal}
+                        disabled={isUpdateDisabled}>
+                        
+                    </lightning-button>
+
+                </div>
+
+
+            </div>
+            
+
+            <!-- Employee Table -->
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-is-relative slds-m-top_medium">
+                    <lightning-spinner
+                        alternative-text="Loading employees"
+                        size="medium">
+                    </lightning-spinner>
+                </div>
+            </template>
+            <template if:true={employees}>
+                <div class="slds-m-top_medium">
+                    <lightning-datatable
+                        key-field="Id"
+                        data={employees}
+                        columns={columns}
+                        selected-rows={selectedRowIds}
+                        onrowselection={handleRowSelection}>
+                    </lightning-datatable>
+                </div>
+            </template>
+            <template if:false={employees.length}>
+                <div class="slds-m-top_medium slds-text-body_regular slds-text-align_center slds-text-color_weak">
+                    No Employees to display. Please use the search or the team option above to find employees.
+                </div>
+            </template>
+
+            <!-- Selected Employees (for Search by Name only) -->
+            <template if:true={isNameFilter}>
+                <template if:true={accumulatedSelectedEmployees.length}>
+                    <div class="slds-m-top_medium">
+                        <h3>Selected Employees</h3>
+                        <lightning-datatable
+                            key-field="Id"
+                            data={accumulatedSelectedEmployees}
+                            columns={columns}
+                            hide-checkbox-column>
+                        </lightning-datatable>
+
+                    </div>
+                </template>
+            </template>
+
+        </div>
+    </lightning-card>
+
+    <!-- Modal -->
+    <template if:true={isModalOpen}>
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+
+                    <h2 class="slds-text-heading_medium">
+                        Update Selected Employees
+                    </h2>
+
+                    <template if:true={selectedEmployeeCount}>
+                        <lightning-badge
+                            label={selectedEmployeeCount}
+                            class="slds-theme_success">
+                        </lightning-badge>
+                    </template>
+
+                </header>
+
+
+                <div class="slds-modal__content slds-p-around_medium">
+
+                    <div class="slds-grid slds-gutters">
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="Block"
+                                placeholder="Select Block"
+                                options={blockOptions}
+                                value={selectedBlock}
+                                onchange={handleBlockChange}>
+                            </lightning-combobox>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="Group"
+                                placeholder="Select Group"
+                                options={groupOptions}
+                                value={selectedGroup}
+                                onchange={handleGroupChange}>
+                            </lightning-combobox>
+                        </div>
+
+
+
+                    </div>
+                    <div class="slds-m-top_medium slds-text-heading_small">
+                        Number of Selected Employees:&nbsp;
+                        <strong>{selectedEmployeeCount}</strong>
+                    </div>
+                    <template if:true={availableSeats}>
+                        
+                        <div class="slds-m-top_medium slds-text-heading_small">
+                            Available Seats for Selected Block & Group:&nbsp;
+                            <strong>{availableSeats}</strong>
+                        </div>
+                    </template>
+                    <template if:true={isSeatInsufficient}>
+                        <div class="slds-m-top_medium slds-notify slds-notify_alert slds-theme_warning">
+                            <span class="slds-assistive-text">Warning</span>
+                            ⚠️ Selected employees ({selectedEmployeeCount}) exceed available seats ({availableSeats})
+                        </div>
+                    </template>
+
+                </div>
+
+                
+
+
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={closeModal}></lightning-button>
+                    <lightning-button variant="brand" 
+                                      label="Update All"
+                                      onclick={updateRecords}
+                                      class="slds-m-left_small">
+                    </lightning-button>
+                </footer>
+
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

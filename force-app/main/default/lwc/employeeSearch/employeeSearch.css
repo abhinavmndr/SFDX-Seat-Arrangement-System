@@ -1,0 +1,61 @@
+.search-container {
+    position: relative;
+}
+
+.dropdown {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    margin-top: 6px;
+    z-index: 1000;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.dropdown-item:hover {
+    background-color: #f4f6f9;
+}
+
+.emp-name {
+    font-weight: 600;
+    color: #111827;
+}
+
+.emp-meta {
+    margin-top: 4px;
+}
+
+.badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-right: 6px;
+    font-weight: 500;
+}
+
+.badge.block {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.badge.group {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.muted {
+    color: #9ca3af;
+}
+
+.center {
+    text-align: center;
+}

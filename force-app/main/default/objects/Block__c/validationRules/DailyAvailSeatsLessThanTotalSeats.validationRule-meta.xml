@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DailyAvailSeatsLessThanTotalSeats</fullName>
+    <active>true</active>
+    <errorConditionFormula>Daily_Seats_Available__c &gt; Total_Seats__c</errorConditionFormula>
+    <errorMessage>Daily Seats Available cannot be greater than the Total Seats</errorMessage>
+</ValidationRule>
