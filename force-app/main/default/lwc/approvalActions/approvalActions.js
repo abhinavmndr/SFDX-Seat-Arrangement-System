@@ -82,6 +82,7 @@ export default class ApprovalActions extends LightningElement {
             this.closeModal();
             publish(this.messageContext, APPROVAL_REFRESH, { refresh: true });
             this.dispatchEvent(new CustomEvent('refreshparent'));
+            this.workItemId = null;
         })
         .catch(error => {
             this.showToast('Error', error.body.message, 'error');
