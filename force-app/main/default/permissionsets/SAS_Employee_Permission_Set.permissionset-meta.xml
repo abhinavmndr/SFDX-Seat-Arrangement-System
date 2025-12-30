@@ -13,17 +13,17 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SAS_Month_Wfo_Finder</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>SAS_Request_Controller</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <classAccesses>
-        <apexClass>WfoFinderMonth</apexClass>
+    <customPermissions>
         <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>WfoFinderMonthController</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
+        <name>Employee_Custom_Permission</name>
+    </customPermissions>
     <fieldPermissions>
         <editable>false</editable>
         <field>Block__c.Daily_Occupied_Seats__c</field>
@@ -90,12 +90,12 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>Request__c.Block__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>Request__c.Comment__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -105,12 +105,12 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>Request__c.Group__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>Request__c.Reason__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -120,12 +120,12 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>Request__c.Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>Request__c.Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -162,7 +162,7 @@
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
-        <allowEdit>true</allowEdit>
+        <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>Request__c</object>

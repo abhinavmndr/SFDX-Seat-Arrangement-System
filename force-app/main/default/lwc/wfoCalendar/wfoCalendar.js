@@ -1,5 +1,5 @@
 import { LightningElement, track } from 'lwc';
-import getWfoDays from '@salesforce/apex/WfoFinderMonthController.getWfoDays';
+import findWfoDaysForAMonth from '@salesforce/apex/SAS_Month_Wfo_Finder.findWfoDaysForAMonth';
 import getLoggedInEmployeeId from '@salesforce/apex/SAS_Employee_Controller.getLoggedInEmployeeId';
 
 export default class WfoCalendar extends LightningElement {
@@ -35,7 +35,7 @@ export default class WfoCalendar extends LightningElement {
         const firstDay = new Date(this.year, this.month, 1);
         const empId = this.empId; // Replace or make @api
         console.log(this.toApexDate(firstDay));
-        getWfoDays({ empId: empId, dateValue: this.toApexDate(firstDay) })
+        findWfoDaysForAMonth({ empId: empId, inpDate: this.toApexDate(firstDay) })
             .then((data) => {
                 this.wfoMap = data;
                 this.generateDays();

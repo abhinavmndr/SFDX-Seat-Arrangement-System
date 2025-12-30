@@ -1,4 +1,6 @@
-public with sharing class WfoFinderMonth {
+public with sharing class SAS_Month_Wfo_Finder {
+
+    @AuraEnabled(cacheable=true)
     public static Map<String, Boolean> findWfoDaysForAMonth(String empId, Date inpDate){
 		
         Map<String, Boolean> wfoDaysMap = new Map<String, Boolean>();

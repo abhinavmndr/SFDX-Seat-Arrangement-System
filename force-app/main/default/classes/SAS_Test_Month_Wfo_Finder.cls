@@ -41,7 +41,7 @@ public class SAS_Test_Month_Wfo_Finder {
         // Pick a known month
         Date inputMonth = Date.newInstance(2025, 12, 1);
     
-        Map<String, Boolean> result = WfoFinderMonth.findWfoDaysForAMonth(emp.Id, inputMonth);
+        Map<String, Boolean> result = SAS_Month_Wfo_Finder.findWfoDaysForAMonth(emp.Id, inputMonth);
     
         // Pick a known weekday in that month
         Date knownDate = Date.newInstance(2025, 12, 24); // Wednesday
@@ -59,7 +59,7 @@ public class SAS_Test_Month_Wfo_Finder {
     
         Date inputDate = Date.newInstance(2025, 12, 1);
     
-        Map<String, Boolean> result = WfoFinderMonth.findWfoDaysForAMonth(emp.Id, inputDate);
+        Map<String, Boolean> result = SAS_Month_Wfo_Finder.findWfoDaysForAMonth(emp.Id, inputDate);
     
         // Pick known weekdays in that month
         Date knownDate1 = Date.newInstance(2025, 12, 15); 

@@ -1,4 +1,4 @@
-public class CycleGroupRotator {
+public class SAS_Cycle_Group_Rotator {
     public static void rotateGroups() {
 
         List<Cycle__c> cycles = [
