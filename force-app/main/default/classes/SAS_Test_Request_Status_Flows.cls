@@ -15,19 +15,19 @@ public class SAS_Test_Request_Status_Flows {
             Block__c = oldBlock.Id
         );
         Database.insert(emp, false);
+        
+        Request__c req1 = new Request__c(
+            Requester__c = emp.Id,
+            Status__c = 'Pending'
+        );        
+        Request__c req2 = new Request__c(
+            Requester__c = emp.Id,
+            Status__c = 'Pending',
+            Group__c = 'B',
+            Block__c = newBlock.Id
+        );
+        Database.insert(new List<Request__c>{ req1, req2 }, false);
 
-        Database.insert(new List<Request__c>{
-            new Request__c(
-                Requester__c = emp.Id,
-                Status__c = 'Pending'
-            ),
-            new Request__c(
-                Requester__c = emp.Id,
-                Status__c = 'Pending',
-                Group__c = 'B',
-                Block__c = newBlock.Id
-            )
-        }, false);
     }
 
     @IsTest

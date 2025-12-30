@@ -16,7 +16,7 @@ public class SAS_Test_Cycle_Group_Scheduler {
         System.schedule(
             'Cycle Group Rotation Job',
             cronExp,
-            new CycleGroupScheduler()
+            new SAS_Cycle_Group_Scheduler()
         );
         Test.stopTest(); // scheduled job executes here
 

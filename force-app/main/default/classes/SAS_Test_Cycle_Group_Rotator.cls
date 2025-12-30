@@ -9,7 +9,7 @@ public class SAS_Test_Cycle_Group_Rotator {
         
         Database.insert(new List<Cycle__c>{ c1, c2 },false);
 
-        CycleGroupRotator.rotateGroups();
+        SAS_Cycle_Group_Rotator.rotateGroups();
 
         List<Cycle__c> updatedCycles = [SELECT Name, Group__c FROM Cycle__c ORDER BY CreatedDate];
 
@@ -24,7 +24,7 @@ public class SAS_Test_Cycle_Group_Rotator {
         Database.insert(c, false);
 
         Test.startTest();
-        CycleGroupRotator.rotateGroups();
+        SAS_Cycle_Group_Rotator.rotateGroups();
         Test.stopTest();
 
         Cycle__c updated = [SELECT Group__c FROM Cycle__c WHERE Id = :c.Id];

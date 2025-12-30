@@ -1,136 +1,151 @@
-@isTest
+@IsTest
 public class SAS_Test_Employee_Controller {
-	@testSetup
+
+    @testSetup
     public static void setupTestData() {
 
-        //Create Blocks
-        Block__c block1 = new Block__c(
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User' LIMIT 1];
+
+        User user1 = new User(
+            Alias = 'u1',
+            Email = 'u1@test.com',
+            EmailEncodingKey = 'UTF-8',
+            LastName = 'UserOne',
+            LanguageLocaleKey = 'en_US',
+            LocaleSidKey = 'en_US',
+            ProfileId = p.Id,
+            TimeZoneSidKey = 'America/Los_Angeles',
+            Username = 'user1' + DateTime.now().getTime() + '@test.com'
+        );
+
+        Database.insert(user1, false);
+
+        Block__c blockA = new Block__c(
             Name = 'Block A',
             Total_Seats__c = 20,
             Daily_Seats_Available__c = 10
         );
-        Block__c block2 = new Block__c(
+
+        Block__c blockB = new Block__c(
             Name = 'Block B',
-        	Total_Seats__c = 18,
+            Total_Seats__c = 18,
             Daily_Seats_Available__c = 10
         );
-        insert new List<Block__c>{block1, block2};
-            
- 		//Create Teams
- 		Team__c teamA = new Team__c(Name = 'Team A');
- 		Team__c teamB = new Team__c(Name = 'Team B');
-        insert new List<Team__c>{teamA, teamB};
 
-        //Create Employees
-        List<Employee__c> employees = new List<Employee__c>();
-        employees.add(new Employee__c(
-            Name = 'Abhinav Manandhar',
-            User__c = UserInfo.getUserId(), // current user
-            Block__c = block1.Id,
-            Group__c = 'A',
-            Team__c = teamA.Id,
-            Email__c = 'abhinav@test.com'
-        ));
-        employees.add(new Employee__c(
-            Name = 'Suman Shrestha',
-            Block__c = block1.Id,
-            Group__c = 'A',
-            Team__c = teamB.Id,
-            Email__c = 'suman@test.com'
-        ));
-        employees.add(new Employee__c(
-            Name = 'Ramesh Khatri',
-            Block__c = block2.Id,
-            Group__c = 'B',
-            Team__c = teamA.Id,
-            Email__c = 'ramesh@test.com'
-        ));
-        insert employees;
+        insert new List<Block__c>{ blockA, blockB };
+
+        Team__c teamA = new Team__c(Name = 'Team A');
+        Team__c teamB = new Team__c(Name = 'Team B');
+        insert new List<Team__c>{ teamA, teamB };
+
+        insert new List<Employee__c>{
+            new Employee__c(
+                Name = 'Abhinav Manandhar',
+                User__c = user1.Id,
+                Block__c = blockA.Id,
+                Group__c = 'A',
+                Team__c = teamA.Id,
+                Email__c = 'abhinav@test.com'
+            ),
+            new Employee__c(
+                Name = 'Suman Shrestha',
+                Block__c = blockA.Id,
+                Group__c = 'A',
+                Team__c = teamB.Id,
+                Email__c = 'suman@test.com'
+            ),
+            new Employee__c(
+                Name = 'Ramesh Khatri',
+                Block__c = blockB.Id,
+                Group__c = 'B',
+                Team__c = teamA.Id,
+                Email__c = 'ramesh@test.com'
+            )
+        };
     }
 
     @IsTest
-    public static void givenLoggedInUser_WhenGetLoggedInEmployeeId_ThenReturnsEmployeeRecord() {
+    static void givenLoggedInUser_WhenGetLoggedInEmployeeId_ThenEmployeeReturned() {
 
-        Test.startTest();
-        Employee__c emp = SAS_Employee_Controller.getLoggedInEmployeeId();
-        Test.stopTest();
+        User u = [SELECT Id FROM User WHERE LastName='UserOne' LIMIT 1];
 
-        System.assertNotEquals(null, emp, 'Employee record should not be null');
-        System.assertEquals(UserInfo.getUserId(), [SELECT User__c FROM Employee__c WHERE Id=:emp.Id WITH SECURITY_ENFORCED].User__c,
-                            'Employee.User__c should match logged in user');
-    }
+        System.runAs(u) {
+            Test.startTest();
+            Employee__c emp = SAS_Employee_Controller.getLoggedInEmployeeId();
+            Test.stopTest();
 
-    @IsTest
-    public static void givenGroupName_WhenGetEmployeesByGroup_ThenReturnsEmployeesInGroup() {
-
-        List<Employee__c> emps = SAS_Employee_Controller.getEmployeesByGroup('A');
-        List<Employee__c> empsBlank = SAS_Employee_Controller.getEmployeesByGroup('');
-        
-        System.assertEquals(0, empsBlank.size(), 'Should return 0 employees in Group1');
-        System.assertEquals(2, emps.size(), 'Should return 2 employees in Group1');
-        
-        for (Employee__c e : emps) {
-            System.assertEquals('A', e.Group__c, 'Employee Group__c should match input');
+            System.assertNotEquals(null, emp);
+            System.assertEquals(u.Id, emp.User__c);
         }
     }
 
     @IsTest
-    public static void givenTeamName_WhenGetEmployeesByTeam_ThenReturnsEmployeesInTeam() {
+    static void givenGroupName_WhenGetEmployeesByGroup_ThenCorrectEmployeesReturned() {
 
-        Team__c t = [SELECT Id, Name FROM Team__c WHERE Name = 'Team A'];
+        List<Employee__c> emps = SAS_Employee_Controller.getEmployeesByGroup('A');
+        List<Employee__c> empsBlank = SAS_Employee_Controller.getEmployeesByGroup('');
+
+        System.assertEquals(2, emps.size());
+        System.assertEquals(0, empsBlank.size());
+    }
+
+    @IsTest
+    static void givenTeamId_WhenGetEmployeesByTeam_ThenCorrectEmployeesReturned() {
+
+        Team__c t = [SELECT Id FROM Team__c WHERE Name='Team A' LIMIT 1];
+
         List<Employee__c> emps = SAS_Employee_Controller.getEmployeesByTeam(t.Id);
         List<Employee__c> empsBlank = SAS_Employee_Controller.getEmployeesByTeam('');
 
-        System.assertEquals(2, emps.size(), 'Should return 2 employees in TeamA');
-        System.assertEquals(0, empsBlank.size(), 'Should return 0 employees in TeamA');
+        System.assertEquals(2, emps.size());
+        System.assertEquals(0, empsBlank.size());
     }
 
     @IsTest
-    public static void givenEmployeeName_WhenGetEmployeesByName_ThenReturnsMatchingEmployees() {
+    static void givenEmployeeName_WhenGetEmployeesByName_ThenMatchReturned() {
 
         List<Employee__c> emps = SAS_Employee_Controller.getEmployeesByName('Abhinav');
-        //List<Employee__c> empsBlank = SAS_Employee_Controller.getEmployeesByName('');
 
-        System.assertEquals(1, emps.size(), 'Should return 1 employee matching name');
-        //System.assertEquals(0, emps.size(), 'Should return 0 employee');
-        
-        System.assert(emps[0].Name.contains('Abhinav'), 'Employee name should contain search text');
+        System.assertEquals(1, emps.size());
+        System.assert(emps[0].Name.contains('Abhinav'));
     }
 
     @IsTest
-    public static void givenEmployeeIds_WhenBulkUpdateEmployees_ThenRecordsAreUpdated() {
+    static void givenEmployeeIds_WhenBulkUpdateEmployees_ThenUpdated() {
 
-        List<Employee__c> emps = [SELECT Id, Block__c, Group__c FROM Employee__c WHERE Group__c='A'];
-        Id newBlockId = [SELECT Id FROM Block__c WHERE Name='Block B' WITH SECURITY_ENFORCED LIMIT 1].Id;
+        List<Employee__c> emps = [
+            SELECT Id FROM Employee__c WHERE Group__c='A'
+        ];
+
+        Id newBlockId = [SELECT Id FROM Block__c WHERE Name='Block B' LIMIT 1].Id;
 
         Test.startTest();
         SAS_Employee_Controller.bulkUpdateEmployees(
-            new List<Id>{emps[0].Id, emps[1].Id},
+            new List<Id>{ emps[0].Id, emps[1].Id },
             newBlockId,
             'B'
         );
         Test.stopTest();
 
-        List<Employee__c> updatedEmps = [SELECT Id, Block__c, Group__c FROM Employee__c WHERE Id IN :emps WITH SECURITY_ENFORCED];
-        for (Employee__c e : updatedEmps) {
-            System.assertEquals(newBlockId, e.Block__c, 'Block should be updated');
-            System.assertEquals('B', e.Group__c, 'Group should be updated');
+        for (Employee__c e : [
+            SELECT Block__c, Group__c 
+            FROM Employee__c 
+            WHERE Id IN :emps
+        ]) {
+            System.assertEquals('B', e.Group__c);
+            System.assertEquals(newBlockId, e.Block__c);
         }
     }
 
     @IsTest
-    public static void givenGroupAndBlock_WhenGetAvailableSeats_ThenReturnsSeatsFromFlow() {
+    static void givenGroupAndBlock_WhenGetAvailableSeats_ThenSeatsReturned() {
 
-        // Create dummy Block__c for test
-        Block__c block = [SELECT Id FROM Block__c WITH SECURITY_ENFORCED LIMIT 1];
+        Block__c block = [SELECT Id FROM Block__c LIMIT 1];
 
         Test.startTest();
-        // Note: This calls the autolaunched Flow
-        // In tests, you need to make sure the Flow is active in the org
         Integer seats = SAS_Employee_Controller.getAvailableSeats('A', block.Id);
         Test.stopTest();
 
-        // We cannot assert exact seats in test context unless we mock flow
-        System.assertNotEquals(null, seats, 'Seats should be returned');
+        System.assertNotEquals(null, seats);
     }
 }

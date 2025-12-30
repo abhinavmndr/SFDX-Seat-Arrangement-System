@@ -29,20 +29,26 @@ public class SAS_Test_Employee_Trigger_Handler {
 		Database.insert(teams,false);
 
         // Create Employees
-        Database.insert (new List<Employee__c>{
-            new Employee__c(
-                Name = 'Emp X1',
-                Block__c = block1.Id,
-                Group__c = 'X',
-                Team__c = team1.Id
-            ),
-            new Employee__c(
-                Name = 'Emp Y1',
-                Block__c = block1.Id,
-                Group__c = 'Y',
-                Team__c = team1.Id
-            )
-        },false);
+        List<Employee__c> employees = new List<Employee__c>();
+        
+        Employee__c empX1 = new Employee__c(
+            Name = 'Emp X1',
+            Block__c = block1.Id,
+            Group__c = 'X',
+            Team__c = team1.Id
+        );
+        employees.add(empX1);
+        
+        Employee__c empY1 = new Employee__c(
+            Name = 'Emp Y1',
+            Block__c = block1.Id,
+            Group__c = 'Y',
+            Team__c = team1.Id
+        );
+        employees.add(empY1);
+        
+        Database.insert(employees, false);
+
     }
 
     @IsTest

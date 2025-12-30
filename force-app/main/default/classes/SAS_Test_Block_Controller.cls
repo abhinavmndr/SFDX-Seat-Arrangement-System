@@ -32,7 +32,7 @@ public class SAS_Test_Block_Controller {
             new Employee__c(Name='Emp 5', Block__c=blockB.Id, Group__c='X')
         };
 
-        Database.insert(emps);
+        Database.insert(emps,false);
     }
 
     @IsTest

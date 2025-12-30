@@ -4,7 +4,7 @@ public with sharing class SAS_Employee_Controller {
         Id userId = UserInfo.getUserId();
 
         Employee__c emp = [
-            SELECT Id, Block__c, Group__c 
+            SELECT Id, Block__c, Group__c, User__c 
             FROM Employee__c 
             WHERE User__c = :userId
             LIMIT 1

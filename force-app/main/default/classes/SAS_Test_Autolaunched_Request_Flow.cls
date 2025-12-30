@@ -20,7 +20,7 @@ public class SAS_Test_Autolaunched_Request_Flow {
             LanguageLocaleKey = 'en_US'
         );
 
-        Database.insert(new List<User>{u}, false);
+        Database.insert(u, false);
 
         Employee__c emp = new Employee__c(
             Name = 'Test Employee',
@@ -28,10 +28,10 @@ public class SAS_Test_Autolaunched_Request_Flow {
             Email__c = 'testemployee@example.com'
         );
 
-        Database.insert(new List<Employee__c>{emp}, false);
+        Database.insert(emp, false);
 
         Block__c block = new Block__c(Name = 'Test Block', Total_Seats__c = 10);
-        Database.insert(new List<Block__c>{block}, false);
+        Database.insert(block, false);
     }
 
     @IsTest

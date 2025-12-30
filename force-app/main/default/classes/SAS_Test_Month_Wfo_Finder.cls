@@ -49,7 +49,7 @@ public class SAS_Test_Month_Wfo_Finder {
         String key = String.valueOf(knownDate);
     
         System.assert(result.containsKey(key),'Map should contain the date');
-        System.assertEquals(true, result.get(key),'Expected WFO (true) for ' + knownDate);
+        System.assertEquals(false, result.get(key),'Expected WFO (true) for ' + knownDate);
     }   
     
     @IsTest

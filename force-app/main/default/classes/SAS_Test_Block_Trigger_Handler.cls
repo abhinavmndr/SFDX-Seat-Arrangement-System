@@ -2,7 +2,7 @@
 public class SAS_Test_Block_Trigger_Handler {
 
     @TestSetup
-    static void setupData() {
+    public static void setupData() {
 
         // Create test Block
         Block__c block = new Block__c(
@@ -22,7 +22,7 @@ public class SAS_Test_Block_Trigger_Handler {
     }
     
     @IsTest
-    static void givenDailySeatsIncreasedWithinLimit_WhenValidateDailySeatsAvailable_ThenNoError() {
+    public static void givenDailySeatsIncreasedWithinLimit_WhenValidateDailySeatsAvailable_ThenNoError() {
 
         Block__c block = [SELECT Id, Daily_Seats_Available__c FROM Block__c LIMIT 1];
         block.Daily_Seats_Available__c = 6;
@@ -36,7 +36,7 @@ public class SAS_Test_Block_Trigger_Handler {
     }
 
     @IsTest
-    static void givenDailySeatsExceedsHybrid_WhenValidateDailySeatsAvailable_ThenErrorThrown() {
+    public static void givenDailySeatsExceedsHybrid_WhenValidateDailySeatsAvailable_ThenErrorThrown() {
 
         Block__c block = [SELECT Id, Daily_Seats_Available__c FROM Block__c LIMIT 1];
         block.Daily_Seats_Available__c = 7;

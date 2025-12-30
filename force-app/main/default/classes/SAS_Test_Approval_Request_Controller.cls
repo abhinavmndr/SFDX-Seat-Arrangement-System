@@ -4,22 +4,19 @@ public with sharing class SAS_Test_Approval_Request_Controller {
     @testSetup
     public static void setupTestData() {
 
-       // Create required related objects
         Block__c block = new Block__c(
             Name = 'Test Block',
-        	Total_Seats__c = 20,
+            Total_Seats__c = 20,
             Daily_Seats_Available__c = 10
-            
         );
         Database.insert(block,false);
         
         Employee__c emp = new Employee__c(
             Name = 'Test Employee',
-         	Email__c = 'luffytaro0473@gmail.com'
+            Email__c = 'luffytaro0473@gmail.com'
         );
         Database.insert(emp,false);
 
-        // Create Request__c record
         Request__c req = new Request__c(
             Status__c = 'Pending',
             Requester__c = emp.Id,
@@ -27,9 +24,8 @@ public with sharing class SAS_Test_Approval_Request_Controller {
             Group__c = 'B',
             Type__c = 'Transfer Request'
         );
-        Database.insert(req);
+        Database.insert(req,false);
 
-        // Submit record for approval
         Approval.ProcessSubmitRequest submitReq = new Approval.ProcessSubmitRequest();
         submitReq.setObjectId(req.Id);
         submitReq.setSubmitterId(UserInfo.getUserId());
@@ -54,10 +50,8 @@ public with sharing class SAS_Test_Approval_Request_Controller {
     @IsTest
     public static void givenPendingApprovalWorkItem_WhenApproved_ThenProcessInstanceIsApproved() {
 
-        // Get Request__c
         Request__c reqRec = [SELECT Id FROM Request__c LIMIT 1];
 
-        // Get work item
         ProcessInstanceWorkitem workItem = [
             SELECT Id
             FROM ProcessInstanceWorkitem
@@ -78,33 +72,31 @@ public with sharing class SAS_Test_Approval_Request_Controller {
     }
     
     @IsTest
-	public static void givenPendingApprovalRequests_WhenGetApprovalRequests_ThenDTOsAreReturned() {
+    public static void givenPendingApprovalRequests_WhenGetApprovalRequests_ThenDTOsAreReturned() {
 
-       // Get a Request__c record created in @testSetup
-        Request__c req = [SELECT Id, Name, Status__c, Group__c, Type__c, Date_of_Request__c, Block__r.Name 
-                          FROM Request__c LIMIT 1];
+        Request__c req = [
+            SELECT Id, Name, Status__c, Group__c, Type__c, Date_of_Request__c, Block__r.Name 
+            FROM Request__c 
+            LIMIT 1
+        ];
     
-        // Call the method under test
         List<SAS_Approval_Request_Controller.ApprovalDTO> dtos =
             SAS_Approval_Request_Controller.getApprovalRequests('Pending');
     
-        // Assertions
-        System.assertNotEquals(0, dtos.size(), 'DTO list should not be empty');
+        System.assertNotEquals(0, dtos.size());
     
         SAS_Approval_Request_Controller.ApprovalDTO dto = dtos[0];
     
-        System.assertEquals(req.Id, dto.recordId, 'RecordId should match Request__c');
-        System.assertEquals(req.Name, dto.recordName, 'RecordName should match Request__c');
-        System.assertEquals('Pending', dto.status, 'Status should match');
-        System.assertNotEquals(null, dto.workItemId, 'WorkItemId should not be null');
-        System.assertNotEquals(null, dto.processInstanceId, 'ProcessInstanceId should not be null');
-        System.assertNotEquals(null, dto.submittedBy, 'SubmittedBy should not be null');
+        System.assertEquals(req.Id, dto.recordId);
+        System.assertEquals(req.Name, dto.recordName);
+        System.assertEquals('Pending', dto.status);
+        System.assertNotEquals(null, dto.workItemId);
+        System.assertNotEquals(null, dto.processInstanceId);
+        System.assertNotEquals(null, dto.submittedBy);
     
-        // Request__c related fields
-        System.assertEquals(req.Date_of_Request__c, dto.dateOfRequest, 'DateOfRequest should match');
-        System.assertEquals(req.Block__r.Name, dto.blockName, 'BlockName should match');
-        System.assertEquals(req.Group__c, dto.groupName, 'GroupName should match');
-        System.assertEquals(req.Type__c, dto.requestType, 'RequestType should match');
-
-	}
+        System.assertEquals(req.Date_of_Request__c, dto.dateOfRequest);
+        System.assertEquals(req.Block__r.Name, dto.blockName);
+        System.assertEquals(req.Group__c, dto.groupName);
+        System.assertEquals(req.Type__c, dto.requestType);
+    }
 }

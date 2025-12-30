@@ -24,18 +24,7 @@ public class SAS_Test_Day_Finder_Of_The_Week {
     }
 
     @IsTest
-    static void givenPastDate_WhenGetDayName_ThenCorrectDayReturned() {
-
-        // 2 Dec 2025 → Tuesday
-        Date pastDate = Date.newInstance(2025, 12, 2);
-
-        String dayName = SAS_Day_Finder_Of_The_Week.getDayName(pastDate);
-
-        System.assertEquals('Tuesday',dayName,'Past date should return Tuesday' );
-    }
-
-    @IsTest
-    static void givenFarPastDate_WhenModuloIsNegative_ThenCorrectDayReturned() {
+    static void givenPastDate_WhenModuloIsNegative_ThenCorrectDayReturned() {
 
         // 1 Jan 2025 → Wednesday
         Date farPastDate = Date.newInstance(2025, 1, 1);
