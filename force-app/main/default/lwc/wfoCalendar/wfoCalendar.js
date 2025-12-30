@@ -7,24 +7,30 @@ export default class WfoCalendar extends LightningElement {
     @track days = [];
     @track month;
     @track year;
+
+    baseMonth;
+    baseYear;
+
+    empId;
     wfoMap = {};
 
     connectedCallback() {
         const today = new Date();
+
         this.month = today.getMonth();
         this.year = today.getFullYear();
-        this.loadCalendar();
+
+        this.baseMonth = this.month;
+        this.baseYear = this.year;
 
         getLoggedInEmployeeId()
-        .then(emp => {
-            this.empId = emp.Id; // ✅ extract Id
-            console.log('Logged in Employee ID:', this.empId);
-            this.loadCalendar();
-        })
-
-        .catch(error => {
-            console.error('Error fetching employee ID:', error);
-        });
+            .then(emp => {
+                this.empId = emp.Id;
+                this.loadCalendar();
+            })
+            .catch(error => {
+                console.error('Error fetching employee ID:', error);
+            });
     }
 
     get monthLabel() {
@@ -33,20 +39,21 @@ export default class WfoCalendar extends LightningElement {
 
     loadCalendar() {
         const firstDay = new Date(this.year, this.month, 1);
-        const empId = this.empId; // Replace or make @api
-        console.log(this.toApexDate(firstDay));
-        findWfoDaysForAMonth({ empId: empId, inpDate: this.toApexDate(firstDay) })
-            .then((data) => {
-                this.wfoMap = data;
-                this.generateDays();
-            });
+
+        findWfoDaysForAMonth({
+            empId: this.empId,
+            inpDate: this.toApexDate(firstDay)
+        })
+        .then((data) => {
+            this.wfoMap = data;
+            this.generateDays();
+        });
     }
 
     generateDays() {
         this.days = [];
 
         const firstDay = new Date(this.year, this.month, 1);
-        console.log(firstDay);
         const startingDayOfWeek = firstDay.getDay();
         const numDays = new Date(this.year, this.month + 1, 0).getDate();
 
@@ -57,7 +64,6 @@ export default class WfoCalendar extends LightningElement {
         for (let day = 1; day <= numDays; day++) {
             const jsDate = new Date(this.year, this.month, day);
             const apexDateStr = this.toApexDate(jsDate);
-            console.log(apexDateStr);
 
             const isWfo = this.wfoMap[apexDateStr] === true;
 
@@ -70,6 +76,10 @@ export default class WfoCalendar extends LightningElement {
     }
 
     handlePrevMonth() {
+        if (!this.canGoPrev()) {
+            return;
+        }
+
         this.month--;
         if (this.month < 0) {
             this.month = 11;
@@ -79,6 +89,10 @@ export default class WfoCalendar extends LightningElement {
     }
 
     handleNextMonth() {
+        if (!this.canGoNext()) {
+            return;
+        }
+
         this.month++;
         if (this.month > 11) {
             this.month = 0;
@@ -87,11 +101,22 @@ export default class WfoCalendar extends LightningElement {
         this.loadCalendar();
     }
 
-    toApexDate(jsDate) {
-    const yyyy = jsDate.getFullYear();
-    const mm = String(jsDate.getMonth() + 1).padStart(2, '0');
-    const dd = String(jsDate.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-}
+    canGoPrev() {
+        const prev = new Date(this.year, this.month - 1);
+        const base = new Date(this.baseYear, this.baseMonth - 1);
+        return prev >= base;
+    }
 
+    canGoNext() {
+        const next = new Date(this.year, this.month + 1);
+        const base = new Date(this.baseYear, this.baseMonth + 1);
+        return next <= base;
+    }
+
+    toApexDate(jsDate) {
+        const yyyy = jsDate.getFullYear();
+        const mm = String(jsDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(jsDate.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
 }

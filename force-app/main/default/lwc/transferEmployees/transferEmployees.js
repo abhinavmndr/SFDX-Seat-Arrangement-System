@@ -1,19 +1,15 @@
 import { LightningElement, wire, track } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
-
 import EMPLOYEE_OBJECT from '@salesforce/schema/Employee__c';
 import GROUP_FIELD from '@salesforce/schema/Employee__c.Group__c';
-import BLOCK_FIELD from '@salesforce/schema/Employee__c.Block__c';
 import { publish, MessageContext } from 'lightning/messageService';
 import APPROVAL_REFRESH from '@salesforce/messageChannel/BlockSummaryRefresh__c';
-
 import getTeams from '@salesforce/apex/SAS_Team_Controller.getTeams';
 import getBlocks from '@salesforce/apex/SAS_Block_Controller.getBlocks';
 import getEmployeesByTeam from '@salesforce/apex/SAS_Employee_Controller.getEmployeesByTeam';
 import getEmployeesByName from '@salesforce/apex/SAS_Employee_Controller.getEmployeesByName';
 import bulkUpdateEmployees from '@salesforce/apex/SAS_Employee_Controller.bulkUpdateEmployees';
 import getAvailableSeats from '@salesforce/apex/SAS_Employee_Controller.getAvailableSeats';
-
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 
@@ -39,7 +35,6 @@ export default class TransferEmployees extends LightningElement {
     @wire(MessageContext)
     messageContext;
     isLoading = false;
-
     
     filterOptions = [
         { label: 'Search by Name', value: 'name' },
@@ -77,7 +72,6 @@ export default class TransferEmployees extends LightningElement {
             .catch(err => console.error(err));
     }
 
-
     get isUpdateDisabled() {
         return  (this.isNameFilter && this.accumulatedSelectedEmployees.length === 0) || (this.isTeamFilter && this.selectedEmployees.length === 0);
     }
@@ -102,7 +96,6 @@ export default class TransferEmployees extends LightningElement {
         }
         return this.availableSeats < this.selectedEmployeeCount;
     }
-
 
     @wire(getObjectInfo, { objectApiName: EMPLOYEE_OBJECT })
     objectInfo;
@@ -206,9 +199,6 @@ export default class TransferEmployees extends LightningElement {
         this.selectedRowIds = this.accumulatedSelectedEmployees.map(e => e.Id);
     }
 
-
-
-
     openModal() {
         let employeesToCheck = this.isNameFilter ? this.accumulatedSelectedEmployees : this.selectedEmployees;
 
@@ -216,10 +206,6 @@ export default class TransferEmployees extends LightningElement {
             this.showToast('Error', 'Select at least one employee', 'error');
             return;
         }
-        // 🔥 Filter group options BEFORE showing modal
-        this.filterGroupOptions();
-        this.filterBlockOptions();
-
         this.isModalOpen = true;
     }
 
@@ -297,47 +283,6 @@ export default class TransferEmployees extends LightningElement {
         return [...new Set(employees.map(emp => emp.Block__c))];
     }
 
-    filterGroupOptions() {
-        const selectedGroups = this.getSelectedEmployeeGroups();
-
-        // If all selected employees have the SAME group → hide it
-        if (selectedGroups.length === 1) {
-            const currentGroup = selectedGroups[0];
-
-            this.groupOptions = this.allGroupOptions.filter(
-                opt => opt.value !== currentGroup
-            );
-        } else {
-            // Mixed groups → show all options
-            this.groupOptions = [...this.allGroupOptions];
-        }
-
-        // Reset selection if it becomes invalid
-        if (!this.groupOptions.some(opt => opt.value === this.selectedGroup)) {
-            this.selectedGroup = '';
-        }
-    }
-
-    filterBlockOptions() {
-        const selectedBlocks = this.getSelectedEmployeeBlocks();
-
-        // If all selected employees share the SAME block → hide it
-        if (selectedBlocks.length === 1) {
-            const currentBlock = selectedBlocks[0];
-
-            this.blockOptions = this.allBlockOptions.filter(
-                opt => opt.value !== currentBlock
-            );
-        } else {
-            // Mixed blocks → show all
-            this.blockOptions = [...this.allBlockOptions];
-        }
-
-        // Reset invalid selection
-        if (!this.blockOptions.some(opt => opt.value === this.selectedBlock)) {
-            this.selectedBlock = '';
-        }
-    }
 
     fetchAvailableSeats() {
         if(!this.selectedBlock || !this.selectedGroup) {
@@ -354,7 +299,6 @@ export default class TransferEmployees extends LightningElement {
                 this.availableSeats = null;
             });
     }
-
 
     showToast(title, message, variant) {
         this.dispatchEvent(
@@ -373,6 +317,5 @@ export default class TransferEmployees extends LightningElement {
             callback();
         }, delay);
     }
-
-    
+ 
 }
