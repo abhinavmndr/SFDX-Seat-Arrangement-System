@@ -1,0 +1,64 @@
+<template>
+    <template if:true={employee}>
+
+        <!-- RECORD HEADER -->
+        <div class="slds-page-header slds-page-header_record-home">
+            <div class="slds-grid slds-grid_vertical-align-center">
+
+                <!-- Avatar -->
+                <div class="slds-m-right_medium">
+                    <lightning-avatar
+                        src={photoUrl}
+                        fallback-icon-name="standard:user"
+                        size="large">
+                    </lightning-avatar>
+                </div>
+
+                <!-- Title -->
+                <div class="slds-media__body">
+                    <p class="slds-text-title_caps"><strong>Employee</strong></p>
+                    <h1 class="slds-page-header__title slds-truncate">
+                        {employee.Name}
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECORD DETAILS -->
+        <lightning-card>
+            <div class="slds-p-around_medium">
+                <div class="slds-grid slds-wrap slds-gutters">
+
+                    <div class="slds-col slds-size_1-of-2">
+                        <dl class="slds-list_horizontal slds-wrap">
+                            <dt class="slds-item_label slds-text-color_weak"><strong>Email:</strong></dt>
+                            <dd class="slds-item_detail ">{employee.Email__c}</dd>
+
+                            <dt class="slds-item_label slds-text-color_weak"><strong>Block:</strong></dt>
+                            <dd class="slds-item_detail">{employee.Block__r.Name}</dd>
+
+                            <dt class="slds-item_label slds-text-color_weak"><strong>Group:</strong></dt>
+                            <dd class="slds-item_detail">{employee.Group__c}</dd>
+                        </dl>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-2">
+                        <dl class="slds-list_horizontal slds-wrap">
+                            <dt class="slds-item_label slds-text-color_weak"><strong>Team:</strong></dt>
+                            <dd class="slds-item_detail">{employee.Team__r.Name}</dd>
+
+                            <dt class="slds-item_label slds-text-color_weak">
+                                <strong>Number Of Requests:</strong>
+                            </dt>
+                            <dd class="slds-item_detail">
+                                {employee.Number_Of_Requests__c}
+                            </dd>
+                        </dl>
+                    </div>
+
+                </div>
+            </div>
+        </lightning-card>
+
+    </template>
+</template>

@@ -4,9 +4,16 @@ public with sharing class SAS_Employee_Controller {
         Id userId = UserInfo.getUserId();
 
         Employee__c emp = [
-            SELECT Id, Block__c, Group__c, User__c 
-            FROM Employee__c 
-            WHERE User__c = :userId
+            SELECT Id,
+                   Name,
+                   Email__c,
+                   Group__c,
+                   Number_Of_Requests__c,
+                   Block__r.Name,
+                   Team__r.Name,
+                   User__r.FullPhotoUrl
+            FROM Employee__c
+            WHERE User__c = :UserInfo.getUserId()
             LIMIT 1
         ];
 
