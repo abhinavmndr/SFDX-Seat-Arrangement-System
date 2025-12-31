@@ -6,11 +6,12 @@ import EMPLOYEE_OBJECT from '@salesforce/schema/Employee__c';
 import REQUEST_OBJECT from '@salesforce/schema/Request__c';
 import GROUP_FIELD from '@salesforce/schema/Employee__c.Group__c';
 import TYPE_FIELD from '@salesforce/schema/Request__c.Type__c';
-
 import getBlocks from '@salesforce/apex/SAS_Block_Controller.getBlocks';
 import getAvailableSeats from '@salesforce/apex/SAS_Employee_Controller.getAvailableSeats';
 import getLoggedInEmployeeId from '@salesforce/apex/SAS_Employee_Controller.getLoggedInEmployeeId';
 import createRequest from '@salesforce/apex/SAS_Request_Controller.createRequest';
+import { publish, MessageContext }  from 'lightning/messageService';
+import EMPLOYEE_PROFILE_REFRESH from '@salesforce/messageChannel/EmployeeProfileRefresh__c';
 
 export default class NewRequestModal extends NavigationMixin(LightningElement) {
 
@@ -23,7 +24,8 @@ export default class NewRequestModal extends NavigationMixin(LightningElement) {
     reason;
     availableSeats;
     loggedInEmployee;
-
+    @wire(MessageContext)
+    messageContext;
     blockOptions = [];
     groupOptions = [];
     typeOptions = [];
@@ -142,6 +144,8 @@ export default class NewRequestModal extends NavigationMixin(LightningElement) {
                     variant: 'success'
                 })
             );
+
+            publish(this.messageContext, EMPLOYEE_PROFILE_REFRESH, { refresh: true });
             
             this.dispatchEvent(
                 new CustomEvent('requestcreated', {
