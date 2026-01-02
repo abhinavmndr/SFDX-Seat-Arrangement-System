@@ -56,23 +56,22 @@ public class SAS_Employee_Trigger_Handler{
     public static void validateDailyOccupiedSeats(List<Employee__c> newList){
 
         // List of employees whose group changed to X/Y
-        List<Employee__c> filteredEmpToIncrement = new List<Employee__c>();
+        List<Employee__c> filteredEmpList = new List<Employee__c>();
+        
         // Set of block ids.
         Set<Id> blockIds = new Set<Id>();
 
         for(Employee__c newEmp : newList){
             if((newEmp.Block__c != null) && (newEmp.Group__c == 'X' || newEmp.Group__c == 'Y')){
-                filteredEmpToIncrement.add(newEmp);
+                filteredEmpList.add(newEmp);
                 blockIds.add(newEmp.Block__c);
             } 
         }
         // Create Map of Block Id to Block record.
         Map<Id, Block__c> blockIdToBlockMap = new Map<Id, Block__c>([SELECT Id, Daily_Occupied_Seats__c, Name , Daily_Seats_Available__c FROM Block__c WHERE Id IN :blockIds]);
 
-        // Map to hold unique block updates
-        Map<Id, Block__c> blockUpdateMap = new Map<Id, Block__c>();
 
-        for(Employee__c emp : filteredEmpToIncrement){
+        for(Employee__c emp : filteredEmpList){
             if(blockIdToBlockMap.containsKey(emp.Block__c)){
                 Block__c block = blockIdToBlockMap.get(emp.Block__c);
                 if(block.Daily_Occupied_Seats__c > block.Daily_Seats_Available__c){
@@ -90,13 +89,10 @@ public class SAS_Employee_Trigger_Handler{
         // Set of block ids.
         Set<Id> blockIds = new Set<Id>();
 
-        Set<String> blockGroupKeys = new Set<String>();
-
         for(Employee__c newEmp : newList){
             if((newEmp.Block__c != null) && (newEmp.Group__c != 'X' && newEmp.Group__c != 'Y')){
                 filteredEmp.add(newEmp);
                 blockIds.add(newEmp.Block__c);
-                blockGroupKeys.add(newEmp.Block__c + '---' + newEmp.Group__c);
             } 
         }
         // Create Map of Block Id to Block record.

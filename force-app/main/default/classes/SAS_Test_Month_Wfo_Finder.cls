@@ -2,7 +2,7 @@
 public class SAS_Test_Month_Wfo_Finder {
 
     @testSetup
-    static void setupData() {
+    public static void setupData() {
 
         // Create Cycles
         List<Cycle__c> cycles = new List<Cycle__c>{
@@ -34,9 +34,9 @@ public class SAS_Test_Month_Wfo_Finder {
     }
     
     @IsTest
-    static void givenHybridEmployee_WhenCheckingSpecificDate_ThenValueIsTrue() {
+    public static void givenHybridEmployee_WhenCheckingSpecificDate_ThenValueIsTrue() {
     
-        Employee__c emp = [SELECT Id FROM Employee__c WHERE Group__c = 'A' LIMIT 1];
+        Employee__c emp = [SELECT Id FROM Employee__c WHERE Group__c = 'A' WITH SECURITY_ENFORCED LIMIT 1];
     
         // Pick a known month
         Date inputMonth = Date.newInstance(2025, 12, 1);
@@ -53,9 +53,9 @@ public class SAS_Test_Month_Wfo_Finder {
     }   
     
     @IsTest
-    static void givenNonHybridEmployee_WhenCheckingSpecificDateGreaterThanTodayDate_ThenValueIsTrue() {
+    public static void givenNonHybridEmployee_WhenCheckingSpecificDateGreaterThanTodayDate_ThenValueIsTrue() {
     
-        Employee__c emp = [SELECT Id FROM Employee__c WHERE Group__c = 'X' LIMIT 1];
+        Employee__c emp = [SELECT Id FROM Employee__c WHERE Group__c = 'X' WITH SECURITY_ENFORCED LIMIT 1];
     
         Date inputDate = Date.newInstance(2025, 12, 1);
     

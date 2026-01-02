@@ -2,8 +2,8 @@
 public class SAS_Test_Employee_Sharing_Flow {
 
     @TestSetup
-    static void setupTestData() {
-        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User' LIMIT 1];
+    public static void setupTestData() {
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User' WITH SECURITY_ENFORCED LIMIT 1];
 
         User empUser = new User(
             Alias = 'empuser',
@@ -23,9 +23,9 @@ public class SAS_Test_Employee_Sharing_Flow {
     }
 
     @IsTest
-    static void givenEmployeeWithUserLookup_WhenCreated_ThenEmployeeShareCreated() {
-        User empUser = [SELECT Id FROM User WHERE LastName='Employee' LIMIT 1];
-        Block__c block = [SELECT Id FROM Block__c WHERE Name='Test Block' LIMIT 1];
+    public static void givenEmployeeWithUserLookup_WhenCreated_ThenEmployeeShareCreated() {
+        User empUser = [SELECT Id FROM User WHERE LastName='Employee' WITH SECURITY_ENFORCED LIMIT 1 ];
+        Block__c block = [SELECT Id FROM Block__c WHERE Name='Test Block' WITH SECURITY_ENFORCED LIMIT 1];
 
         Employee__c emp = new Employee__c(
             Name = 'Employee With Share',
@@ -34,15 +34,14 @@ public class SAS_Test_Employee_Sharing_Flow {
             Group__c = 'A'
         );
 
-        Test.startTest();
         Database.insert(emp, false);
-        Test.stopTest();
 
         List<Employee__Share> shares = [
             SELECT Id, UserOrGroupId, AccessLevel, RowCause 
             FROM Employee__Share 
             WHERE ParentId = :emp.Id 
             AND UserOrGroupId = :emp.User__c
+            WITH SECURITY_ENFORCED
         ];
 
         System.assertEquals(1, shares.size(), 'One share record should be created');

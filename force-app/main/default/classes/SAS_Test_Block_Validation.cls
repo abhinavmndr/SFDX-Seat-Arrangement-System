@@ -1,9 +1,8 @@
 @IsTest
 public class SAS_Test_Block_Validation {
 
-
     @IsTest
-    static void whenDailySeatsGreaterThanTotal_onInsert_thenValidationFails() {
+    public static void givenDailySeatsAvailableGreaterThanTotal_WhenRecordIsInserted_ThenValidationFails() {
 
         Block__c block = new Block__c(
             Name = 'Insert Fail Block',
@@ -19,7 +18,7 @@ public class SAS_Test_Block_Validation {
 
 
     @IsTest
-    static void whenDailySeatsGreaterThanTotal_onUpdate_thenValidationFails() {
+    public static void givenDailySeatsAvailableGreaterThanTotal_WhenRecordIsUpdated_ThenValidationFails() {
 
         // Step 1: Insert a VALID record
         Block__c block = new Block__c(
@@ -47,7 +46,7 @@ public class SAS_Test_Block_Validation {
 
 
     @IsTest
-    static void whenDailySeatsLessOrEqual_onUpdate_thenSucceeds() {
+    public static void givenDailySeatsAvailableLesserOrEqualThanTotal_WhenRecordIsUpdated_ThenValidationSucceeds() {
 
         Block__c block = new Block__c(
             Name = 'Update Success Block',
@@ -74,6 +73,7 @@ public class SAS_Test_Block_Validation {
             SELECT Daily_Seats_Available__c
             FROM Block__c
             WHERE Id = :block.Id
+            WITH SECURITY_ENFORCED
         ];
         System.assertEquals(9, updatedBlock.Daily_Seats_Available__c, 'Daily Seats Available should be updated');
     }

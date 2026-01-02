@@ -2,7 +2,7 @@
 public class SAS_Test_Day_Finder_Of_The_Week {
 	
     @IsTest
-    static void givenReferenceDate_WhenGetDayName_ThenCorrectDayReturned() {
+    public static void givenReferenceDate_WhenGetDayName_ThenCorrectDayReturned() {
 
         // Reference date used in class: 3 Dec 2025
         Date referenceDate = Date.newInstance(2025, 12, 3);
@@ -13,7 +13,7 @@ public class SAS_Test_Day_Finder_Of_The_Week {
     }
 
     @IsTest
-    static void givenFutureDate_WhenGetDayName_ThenCorrectDayReturned() {
+    public static void givenFutureDate_WhenGetDayName_ThenCorrectDayReturned() {
 
         // 4 Dec 2025 → Thursday
         Date futureDate = Date.newInstance(2025, 12, 4);
@@ -24,7 +24,7 @@ public class SAS_Test_Day_Finder_Of_The_Week {
     }
 
     @IsTest
-    static void givenPastDate_WhenModuloIsNegative_ThenCorrectDayReturned() {
+    public static void givenPastDate_WhenModuloIsNegative_ThenCorrectDayReturned() {
 
         // 1 Jan 2025 → Wednesday
         Date farPastDate = Date.newInstance(2025, 1, 1);

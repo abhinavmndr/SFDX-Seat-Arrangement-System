@@ -2,7 +2,7 @@
 public class SAS_Test_Cycle_Trigger_Handler {
 
     @TestSetup
-    static void setupTestData() {
+    public static void setupTestData() {
         Cycle__c existingCycle = new Cycle__c(
             Name = 'Cycle 1',
             Current_Schedule__c = 'Monday;Tuesday',
@@ -12,7 +12,7 @@ public class SAS_Test_Cycle_Trigger_Handler {
     }
 
     @IsTest
-    static void givenNewCycle_WhenInsertWithoutConflictingWeekday_ThenInsertSucceeds() {
+    public static void givenNewCycle_WhenInsertWithoutConflictingWeekday_ThenInsertSucceeds() {
         Cycle__c newCycle = new Cycle__c(
             Name = 'Cycle 3',
             Current_Schedule__c = 'Wednesday;Thursday'
@@ -25,7 +25,7 @@ public class SAS_Test_Cycle_Trigger_Handler {
     }
 
     @IsTest
-    static void givenNewCycle_WhenInsertWithConflictingWeekday_ThenErrorThrown() {
+    public static void givenNewCycle_WhenInsertWithConflictingWeekday_ThenErrorThrown() {
         Cycle__c conflictingCycle = new Cycle__c(
             Name = 'Cycle 4',
             Current_Schedule__c = 'Monday'
@@ -41,7 +41,7 @@ public class SAS_Test_Cycle_Trigger_Handler {
     }
 
     @IsTest
-    static void givenCycle_WhenUpdateWithoutConflictingWeekday_ThenUpdateSucceeds() {
+    public static void givenCycle_WhenUpdateWithoutConflictingWeekday_ThenUpdateSucceeds() {
         Cycle__c cycleToUpdate = [SELECT Id, Current_Schedule__c FROM Cycle__c LIMIT 1];
         cycleToUpdate.Current_Schedule__c = 'Friday';
 
@@ -55,7 +55,7 @@ public class SAS_Test_Cycle_Trigger_Handler {
     }
 
     @IsTest
-    static void givenCycle_WhenUpdateWithConflictingWeekday_ThenErrorThrown() {
+    public static void givenCycle_WhenUpdateWithConflictingWeekday_ThenErrorThrown() {
         Cycle__c cyc2 = new Cycle__c(
             Name = 'Cycle 2'
         );
@@ -73,7 +73,7 @@ public class SAS_Test_Cycle_Trigger_Handler {
     }
     
     @IsTest
-    static void givenNewCycleWithUniqueGroup_whenValidateGroups_thenInsertSucceeds() {
+    public static void givenNewCycleWithUniqueGroup_whenValidateGroups_thenInsertSucceeds() {
         Cycle__c newCycle = new Cycle__c(
             Name = 'Cycle 5',
             Group__c = 'B'
@@ -85,7 +85,7 @@ public class SAS_Test_Cycle_Trigger_Handler {
     }
 
     @IsTest
-    static void givenNewCycleWithExistingGroup_whenValidateGroups_thenErrorReturned() {
+    public static void givenNewCycleWithExistingGroup_whenValidateGroups_thenErrorReturned() {
         Cycle__c newCycle = new Cycle__c(
             Name = 'Cycle 6',
             Group__c = 'A'
@@ -101,7 +101,7 @@ public class SAS_Test_Cycle_Trigger_Handler {
     }
 
     @IsTest
-    static void givenExistingCycleUpdateWithUniqueGroup_whenValidateGroups_thenUpdateSucceeds() {
+    public static void givenExistingCycleUpdateWithUniqueGroup_whenValidateGroups_thenUpdateSucceeds() {
         Cycle__c cyc2 = new Cycle__c(
             Name = 'Cycle 2'
         );
@@ -114,7 +114,7 @@ public class SAS_Test_Cycle_Trigger_Handler {
     }
 
     @IsTest
-    static void givenExistingCycleUpdateWithExistingGroup_whenValidateGroups_thenErrorReturned() {
+    public static void givenExistingCycleUpdateWithExistingGroup_whenValidateGroups_thenErrorReturned() {
         Cycle__c cyc2 = new Cycle__c(
             Name = 'Cycle 2'
         );

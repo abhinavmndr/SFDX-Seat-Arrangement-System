@@ -23,6 +23,7 @@ public class SAS_Test_Cycle_Group_Scheduler {
         List<Cycle__c> updatedCycles = [
             SELECT Group__c
             FROM Cycle__c
+            WITH SECURITY_ENFORCED
             ORDER BY CreatedDate
         ];
 

@@ -11,7 +11,7 @@ public class SAS_Test_Cycle_Group_Rotator {
 
         SAS_Cycle_Group_Rotator.rotateGroups();
 
-        List<Cycle__c> updatedCycles = [SELECT Name, Group__c FROM Cycle__c ORDER BY CreatedDate];
+        List<Cycle__c> updatedCycles = [SELECT Name, Group__c FROM Cycle__c WITH SECURITY_ENFORCED ORDER BY CreatedDate ];
 
         System.assertEquals('B', updatedCycles[0].Group__c);
         System.assertEquals('A', updatedCycles[1].Group__c);
@@ -27,7 +27,7 @@ public class SAS_Test_Cycle_Group_Rotator {
         SAS_Cycle_Group_Rotator.rotateGroups();
         Test.stopTest();
 
-        Cycle__c updated = [SELECT Group__c FROM Cycle__c WHERE Id = :c.Id];
+        Cycle__c updated = [SELECT Group__c FROM Cycle__c WHERE Id = :c.Id WITH SECURITY_ENFORCED];
 
         System.assertEquals('A', updated.Group__c);
     }

@@ -1,5 +1,7 @@
 public with sharing class SAS_Block_Trigger_Handler {
+    
     public static void validateDailySeatsAvailable(List<Block__c> newList, Map<Id, Block__c> oldMap){
+        
         //Create list to filter blocks whose Daily seats available is 
         List<Block__c> filteredBlk = new List<Block__c>();
 
@@ -20,17 +22,18 @@ public with sharing class SAS_Block_Trigger_Handler {
         for (AggregateResult ar : [
             SELECT Group__c grp, COUNT(Id) total 
             FROM Employee__c 
-            WHERE Block__c IN :blockIds
+            WHERE Block__c IN :blockIds 
+            AND Group__c NOT IN ('X', 'Y')
             GROUP BY Group__c
         ]) {
             String key = (String)ar.get('grp');  // just the group
             groupToGroupCountMap.put(key, (Integer)ar.get('total'));
         }
 
-        Integer maxValue = null;
+        Integer maxValue = 0;
 
         for(Integer val : groupToGroupCountMap.values()){
-            if(maxValue == null || val > maxValue){
+            if(maxValue == 0 || val > maxValue){
                 maxValue = val;
             }
         }

@@ -2,7 +2,7 @@
 public class SAS_Test_Block_Trigger_Handler {
 
     @TestSetup
-    public static void setupData() {
+    public static void setupTestData() {
 
         // Create test Block
         Block__c block = new Block__c(
@@ -24,7 +24,7 @@ public class SAS_Test_Block_Trigger_Handler {
     @IsTest
     public static void givenDailySeatsIncreasedWithinLimit_WhenValidateDailySeatsAvailable_ThenNoError() {
 
-        Block__c block = [SELECT Id, Daily_Seats_Available__c FROM Block__c LIMIT 1];
+        Block__c block = [SELECT Id, Daily_Seats_Available__c FROM Block__c WITH SECURITY_ENFORCED LIMIT 1];
         block.Daily_Seats_Available__c = 6;
        
         // Use Database.update with allOrNone=false
@@ -38,7 +38,7 @@ public class SAS_Test_Block_Trigger_Handler {
     @IsTest
     public static void givenDailySeatsExceedsHybrid_WhenValidateDailySeatsAvailable_ThenErrorThrown() {
 
-        Block__c block = [SELECT Id, Daily_Seats_Available__c FROM Block__c LIMIT 1];
+        Block__c block = [SELECT Id, Daily_Seats_Available__c FROM Block__c WITH SECURITY_ENFORCED LIMIT 1];
         block.Daily_Seats_Available__c = 7;
         
         Database.SaveResult result = Database.update(block, false);

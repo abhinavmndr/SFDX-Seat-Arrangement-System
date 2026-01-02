@@ -2,7 +2,7 @@
 public class SAS_Test_Block_Controller {
 
     @testSetup
-    static void setupTestData() {
+    public static void setupTestData() {
 
         // Create Blocks
         Block__c blockA = new Block__c(
@@ -36,10 +36,9 @@ public class SAS_Test_Block_Controller {
     }
 
     @IsTest
-    static void givenBlocksAndEmployees_WhenGetBlockSummaries_ThenSummariesReturned() {
+    public static void givenBlocksAndEmployees_WhenGetBlockSummaries_ThenSummariesReturned() {
 
-        List<SAS_Block_Controller.BlockSummaryWrapper> summaries =
-            SAS_Block_Controller.getBlockSummaries();
+        List<SAS_Block_Controller.BlockSummaryWrapper> summaries = SAS_Block_Controller.getBlockSummaries();
 
         System.assertNotEquals(null, summaries, 'Summaries should not be null');
         System.assertEquals(2, summaries.size(), 'Two blocks should be returned');
@@ -53,6 +52,13 @@ public class SAS_Test_Block_Controller {
             }
         }
         
+        System.assertNotEquals(null, blockA, 'Block A summary should exist');
+        System.assertEquals('Bakhundole', blockA.location);
+        System.assertEquals(59, blockA.dailyAvailable, 'Daily available seats incorrect');
+        System.assertEquals(38, blockA.groupCounts.get('A'),'Hybrid seats for Group A should be 40 - 2 = 38');
+        System.assertEquals(false, blockA.groupCounts.containsKey('X'));
+		System.assertEquals(false, blockA.groupCounts.containsKey('Y'));
+
         // Validate Block B 
         SAS_Block_Controller.BlockSummaryWrapper blockB;
         for (SAS_Block_Controller.BlockSummaryWrapper w : summaries) {
@@ -62,21 +68,8 @@ public class SAS_Test_Block_Controller {
             }
         }
 
-        System.assertNotEquals(null, blockA, 'Block A summary should exist');
         System.assertNotEquals(null, blockB, 'Block B summary should exist');
-        System.assertEquals('Bakhundole', blockA.location);
-        System.assertEquals(59, blockA.dailyAvailable, 'Daily available seats incorrect');
-
-        // Hybrid logic checks
-        System.assertEquals(38, blockA.groupCounts.get('A'),
-            'Hybrid seats for Group A should be 40 - 2 = 38');
-        System.assertEquals(39, blockA.groupCounts.get('B'),
-            'Hybrid seats for Group B should be 40 - 1 = 39');
-
-        // Excluded groups
-        System.assertEquals(false, blockA.groupCounts.containsKey('X'));
-        System.assertEquals(false, blockA.groupCounts.containsKey('Y'));
-        
+        System.assertEquals(39, blockA.groupCounts.get('B'),'Hybrid seats for Group B should be 40 - 1 = 39');
         System.assertEquals(0,blockB.groupCounts.get('B'),'Non-hybrid block should return raw employee count');
     }	
 

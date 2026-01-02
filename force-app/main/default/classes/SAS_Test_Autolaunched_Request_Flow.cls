@@ -2,9 +2,9 @@
 public class SAS_Test_Autolaunched_Request_Flow {
 
     @TestSetup
-    static void setupTestData() {
+    public static void setupTestData() {
 
-        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User' LIMIT 1];
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User' WITH SECURITY_ENFORCED LIMIT 1];
 
         User u = new User(
             FirstName = 'Test',
@@ -35,10 +35,10 @@ public class SAS_Test_Autolaunched_Request_Flow {
     }
 
     @IsTest
-    static void testFlowCreatesRequestAndSubmitsForApproval() {
+    public static void givenValidFlowInput_WhenFlowRuns_ThenRequestIsCreatedAndSubmittedForApproval() {
 
-        Employee__c emp = [SELECT Id FROM Employee__c LIMIT 1];
-        Block__c block = [SELECT Id FROM Block__c LIMIT 1];
+        Employee__c emp = [SELECT Id FROM Employee__c WITH SECURITY_ENFORCED LIMIT 1];
+        Block__c block = [SELECT Id FROM Block__c WITH SECURITY_ENFORCED LIMIT 1];
 
         Map<String, Object> inputs = new Map<String, Object>{
             'varBlockId'      => block.Id,
@@ -48,8 +48,6 @@ public class SAS_Test_Autolaunched_Request_Flow {
             'varRequesterId'  => emp.Id
         };
 
-        Test.startTest();
-
         Flow.Interview.Submit_for_Approval_From_Autolaunched_Flow flow =
             new Flow.Interview.Submit_for_Approval_From_Autolaunched_Flow(inputs);
 
@@ -57,10 +55,7 @@ public class SAS_Test_Autolaunched_Request_Flow {
 
         String createdRequestId = (String)flow.getVariableValue('varCreatedRequestId');
 
-        Test.stopTest();
-
-        Request__c req = [SELECT Id, Requester__c, Status__c, Group__c, Block__c
-                          FROM Request__c WHERE Id = :createdRequestId];
+        Request__c req = [SELECT Id, Requester__c, Status__c, Group__c, Block__c FROM Request__c WHERE Id = :createdRequestId WITH SECURITY_ENFORCED];
 
         System.assertEquals(emp.Id, req.Requester__c, 'Requester should match Employee');
         System.assertEquals('A', req.Group__c, 'Group should match input');
@@ -71,6 +66,7 @@ public class SAS_Test_Autolaunched_Request_Flow {
             SELECT Id, TargetObjectId, Status
             FROM ProcessInstance
             WHERE TargetObjectId = :createdRequestId
+            WITH SECURITY_ENFORCED
         ];
 
         System.assert(!approvals.isEmpty(), 'Approval ProcessInstance should exist for the Request');

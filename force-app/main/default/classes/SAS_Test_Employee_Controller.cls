@@ -65,14 +65,12 @@ public class SAS_Test_Employee_Controller {
     }
 
     @IsTest
-    static void givenLoggedInUser_WhenGetLoggedInEmployeeId_ThenEmployeeReturned() {
+    public static void givenLoggedInUser_WhenGetLoggedInEmployeeId_ThenEmployeeReturned() {
 
         User u = [SELECT Id FROM User WHERE LastName='UserOne' LIMIT 1];
 
         System.runAs(u) {
-            Test.startTest();
             Employee__c emp = SAS_Employee_Controller.getLoggedInEmployeeId();
-            Test.stopTest();
 
             System.assertNotEquals(null, emp);
             System.assertEquals(u.Id, emp.User__c);
@@ -80,7 +78,7 @@ public class SAS_Test_Employee_Controller {
     }
 
     @IsTest
-    static void givenGroupName_WhenGetEmployeesByGroup_ThenCorrectEmployeesReturned() {
+    public static void givenGroupName_WhenGetEmployeesByGroup_ThenCorrectEmployeesReturned() {
 
         List<Employee__c> emps = SAS_Employee_Controller.getEmployeesByGroup('A');
         List<Employee__c> empsBlank = SAS_Employee_Controller.getEmployeesByGroup('');
@@ -90,7 +88,7 @@ public class SAS_Test_Employee_Controller {
     }
 
     @IsTest
-    static void givenTeamId_WhenGetEmployeesByTeam_ThenCorrectEmployeesReturned() {
+    public static void givenTeamId_WhenGetEmployeesByTeam_ThenCorrectEmployeesReturned() {
 
         Team__c t = [SELECT Id FROM Team__c WHERE Name='Team A' LIMIT 1];
 
@@ -102,7 +100,7 @@ public class SAS_Test_Employee_Controller {
     }
 
     @IsTest
-    static void givenEmployeeName_WhenGetEmployeesByName_ThenMatchReturned() {
+    public static void givenEmployeeName_WhenGetEmployeesByName_ThenMatchReturned() {
 
         List<Employee__c> emps = SAS_Employee_Controller.getEmployeesByName('Abhinav');
 
@@ -111,7 +109,7 @@ public class SAS_Test_Employee_Controller {
     }
 
     @IsTest
-    static void givenEmployeeIds_WhenBulkUpdateEmployees_ThenUpdated() {
+    public static void givenEmployeeIds_WhenBulkUpdateEmployees_ThenUpdated() {
 
         List<Employee__c> emps = [
             SELECT Id FROM Employee__c WHERE Group__c='A'
@@ -119,13 +117,11 @@ public class SAS_Test_Employee_Controller {
 
         Id newBlockId = [SELECT Id FROM Block__c WHERE Name='Block B' LIMIT 1].Id;
 
-        Test.startTest();
         SAS_Employee_Controller.bulkUpdateEmployees(
             new List<Id>{ emps[0].Id, emps[1].Id },
             newBlockId,
             'B'
         );
-        Test.stopTest();
 
         for (Employee__c e : [
             SELECT Block__c, Group__c 
@@ -138,13 +134,11 @@ public class SAS_Test_Employee_Controller {
     }
 
     @IsTest
-    static void givenGroupAndBlock_WhenGetAvailableSeats_ThenSeatsReturned() {
+    public static void givenGroupAndBlock_WhenGetAvailableSeats_ThenSeatsReturned() {
 
         Block__c block = [SELECT Id FROM Block__c LIMIT 1];
 
-        Test.startTest();
         Integer seats = SAS_Employee_Controller.getAvailableSeats('A', block.Id);
-        Test.stopTest();
 
         System.assertNotEquals(null, seats);
     }

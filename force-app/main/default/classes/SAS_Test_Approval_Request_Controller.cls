@@ -38,7 +38,7 @@ public with sharing class SAS_Test_Approval_Request_Controller {
     @IsTest
     static void givenRequestSubmittedForApproval_WhenGetApprovalRequestsByRecordId_ThenWorkItemsAreReturned() {
 
-        Request__c reqRec = [SELECT Id FROM Request__c LIMIT 1];
+        Request__c reqRec = [SELECT Id FROM Request__c WITH SECURITY_ENFORCED LIMIT 1];
 
         List<ProcessInstanceWorkitem> workItems =
             SAS_Approval_Request_Controller.getApprovalRequestsByRecordId(reqRec.Id);
@@ -50,12 +50,13 @@ public with sharing class SAS_Test_Approval_Request_Controller {
     @IsTest
     public static void givenPendingApprovalWorkItem_WhenApproved_ThenProcessInstanceIsApproved() {
 
-        Request__c reqRec = [SELECT Id FROM Request__c LIMIT 1];
+        Request__c reqRec = [SELECT Id FROM Request__c WITH SECURITY_ENFORCED LIMIT 1];
 
         ProcessInstanceWorkitem workItem = [
             SELECT Id
             FROM ProcessInstanceWorkitem
             WHERE ProcessInstance.TargetObjectId = :reqRec.Id
+            WITH SECURITY_ENFORCED
             LIMIT 1
         ];
 
@@ -65,6 +66,7 @@ public with sharing class SAS_Test_Approval_Request_Controller {
             SELECT Status
             FROM ProcessInstance
             WHERE TargetObjectId = :reqRec.Id
+            WITH SECURITY_ENFORCED
             LIMIT 1
         ];
 
@@ -77,6 +79,7 @@ public with sharing class SAS_Test_Approval_Request_Controller {
         Request__c req = [
             SELECT Id, Name, Status__c, Group__c, Type__c, Date_of_Request__c, Block__r.Name 
             FROM Request__c 
+            WITH SECURITY_ENFORCED
             LIMIT 1
         ];
     
