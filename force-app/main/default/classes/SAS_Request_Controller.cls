@@ -23,6 +23,19 @@ public with sharing class SAS_Request_Controller {
     @AuraEnabled
     public static String createRequest(String requestType, String blockId, String groupName, String reason, String empId) {
 
+        // Step 1: Check if there is already a Pending request
+        List<Request__c> existingRequests = [
+            SELECT Id
+            FROM Request__c
+            WHERE Requester__c = :empId
+            AND Status__c = 'Pending'
+            LIMIT 1
+        ];
+    
+        if (!existingRequests.isEmpty()) {
+            throw new AuraHandledException('You already have a pending request. Please wait until it is processed.');
+        }
+        
         Map<String, Object> inputs = new Map<String, Object>{
             'varBlockId'      => blockId,
             'varGroupName'    => groupName,
